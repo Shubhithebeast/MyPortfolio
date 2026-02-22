@@ -26,6 +26,7 @@ interface IconSidebarProps {
   onSelect: (id: string) => void;
   visibleSections: string[];
   embedded?: boolean;
+  resumeViewPath?: string;
   resumePdfPath?: string;
 }
 
@@ -34,6 +35,7 @@ const IconSidebar = ({
   onSelect,
   visibleSections,
   embedded = false,
+  resumeViewPath = "/resume-view.html",
   resumePdfPath = "/resume.pdf",
 }: IconSidebarProps) => {
   return (
@@ -77,7 +79,7 @@ const IconSidebar = ({
       {embedded && (
         <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2 pl-1 sm:pl-2">
           <a
-            href={resumePdfPath}
+            href={resumeViewPath}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 px-2 py-1.5 rounded-md border border-border text-xs text-terminal-cyan hover:text-primary hover:border-primary/60 transition-colors"

@@ -16,15 +16,15 @@ const SECTION_MAP: Record<string, SectionId> = {
 const HELP_OUTPUT = [
   '<span class="text-[hsl(140,100%,50%)]">Available commands:</span>',
   '',
-  '  <span class="text-[hsl(180,70%,55%)]">help</span>          — Show this help message',
+  // '  <span class="text-[hsl(180,70%,55%)]">help</span>          — Show this help message',
   '  <span class="text-[hsl(180,70%,55%)]">about</span>         — Show profile intro',
   '  <span class="text-[hsl(180,70%,55%)]">ls</span>            — List all sections',
-  '  <span class="text-[hsl(180,70%,55%)]">cd &lt;section&gt;</span>  — Navigate to a section',
+  // '  <span class="text-[hsl(180,70%,55%)]">cd &lt;section&gt;</span>  — Navigate to a section',
   '  <span class="text-[hsl(180,70%,55%)]">cat &lt;section&gt;</span> — Print section preview in terminal',
   '  <span class="text-[hsl(180,70%,55%)]">open &lt;section&gt;</span>— Open section on page',
-  '  <span class="text-[hsl(180,70%,55%)]">showall</span>       — Show all sections',
-  '  <span class="text-[hsl(180,70%,55%)]">ai &lt;message&gt;</span>   — AI chat with portfolio RAG',
-  '  <span class="text-[hsl(180,70%,55%)]">chat &lt;message&gt;</span> — Alias for ai',
+  // '  <span class="text-[hsl(180,70%,55%)]">showall</span>       — Show all sections',
+  // '  <span class="text-[hsl(180,70%,55%)]">ai &lt;message&gt;</span>   — AI chat with portfolio RAG',
+  // '  <span class="text-[hsl(180,70%,55%)]">chat &lt;message&gt;</span> — Alias for ai',
   '  <span class="text-[hsl(180,70%,55%)]">whoami</span>        — About me',
   '  <span class="text-[hsl(180,70%,55%)]">pwd</span>           — Print current directory',
   '  <span class="text-[hsl(180,70%,55%)]">resume [--view|--download]</span> — Open/download CV PDF',
@@ -33,15 +33,16 @@ const HELP_OUTPUT = [
   '',
   '<span class="text-[hsl(35,100%,55%)]">Hidden easter eggs:</span>',
   '  <span class="text-[hsl(180,70%,55%)]">matrix</span>        — Green raining animation',
-  '  <span class="text-[hsl(180,70%,55%)]">top</span>           — Live skill usage stats',
-  '  <span class="text-[hsl(180,70%,55%)]">history</span>       — Fake command history',
-  '  <span class="text-[hsl(180,70%,55%)]">neofetch</span>      — ASCII profile card',
+  // '  <span class="text-[hsl(180,70%,55%)]">top</span>           — Live skill usage stats',
+  '  <span class="text-[hsl(180,70%,55%)]">history</span>       — Command history',
+  // '  <span class="text-[hsl(180,70%,55%)]">neofetch</span>      — ASCII profile card',
   '',
   '<span class="text-[hsl(220,10%,40%)]"># Sections: about, skills, experience, projects, education, achievements, ai</span>',
 ];
 
 const MATRIX_MARKER = "__EASTER_MATRIX__";
 const RESUME_PDF_PATH = "/resume.pdf";
+const RESUME_VIEW_PATH = "/resume-view.html";
 
 const HISTORY_OUTPUT = [
   '  1  whoami',
@@ -97,12 +98,7 @@ const LS_OUTPUT = [
 ];
 
 const WHOAMI_OUTPUT = [
-  '<span class="text-[hsl(220,10%,40%)]">────────────────────────────</span>',
-  '<span class="text-[28px] font-extrabold leading-none text-[hsl(140,100%,50%)]">SHUBHAM BISHT</span>',
-  '<span class="text-base font-bold text-[hsl(35,100%,55%)]">Associate Software Engineer @ OpenText</span>',
-  '<span class="font-semibold text-[hsl(140,100%,75%)]">This portfolio belongs to Shubham Bisht.</span>',
-  '<span class="text-[hsl(180,70%,55%)]">shubh17bisht@gmail.com</span> | <span class="text-[hsl(180,70%,55%)]">github.com/Shubhithebeast</span>',
-  '<span class="text-[hsl(220,10%,40%)]">────────────────────────────</span>',
+  `<div style="white-space:normal;border-top:1px solid hsl(220,10%,30%);border-bottom:1px solid hsl(220,10%,30%);padding:10px 0;"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start;"><div style="min-width:240px;flex:1 1 320px;line-height:1.2;"><div style="font-size:28px;font-weight:800;color:hsl(140,100%,50%);">SHUBHAM BISHT</div><div style="margin-top:4px;font-size:16px;font-weight:700;color:hsl(35,100%,55%);">Associate Software Engineer @ OpenText</div><div style="margin-top:4px;font-size:14px;font-weight:600;color:hsl(140,100%,75%);">This portfolio belongs to Shubham Bisht.</div><div style="margin-top:4px;font-size:14px;color:hsl(180,70%,55%);">shubhambisht703@gmail.com <span style="color:hsl(220,10%,55%);">|</span> github.com/Shubhithebeast</div></div><div style="width:104px;height:104px;border:1px solid hsl(140,30%,20%);border-radius:10px;overflow:hidden;background:hsl(220,16%,10%);flex:0 0 104px;"><img src="/mypic.png" alt="Shubham profile" style="width:100%;height:100%;object-fit:cover;object-position:center 28%;" /></div></div></div>`,
 ];
 
 const SECTION_PREVIEW: Record<SectionId, string[]> = {
@@ -175,7 +171,7 @@ export function useTerminalRouter() {
   }, []);
 
   const resetView = useCallback(() => {
-    setOutputHistory([]);
+    setOutputHistory([{ input: "whoami", output: WHOAMI_OUTPUT }]);
     setVisibleSections(["about"]);
     setActiveSection("about");
     setCurrentDir("~");
@@ -230,10 +226,10 @@ export function useTerminalRouter() {
 
         case "resume": {
           if (arg === "--view") {
-            window.open(RESUME_PDF_PATH, "_blank", "noopener,noreferrer");
+            window.open(RESUME_VIEW_PATH, "_blank", "noopener,noreferrer");
             return [
               '<span class="text-[hsl(140,70%,50%)]">✓ Opening CV in new tab...</span>',
-              `<span class="text-[hsl(180,70%,55%)]">Source: ${RESUME_PDF_PATH}</span>`,
+              `<span class="text-[hsl(180,70%,55%)]">Source: ${RESUME_VIEW_PATH}</span>`,
             ];
           }
 
@@ -256,7 +252,7 @@ export function useTerminalRouter() {
           }
 
           const link = document.createElement("a");
-          link.href = RESUME_PDF_PATH;
+          link.href = RESUME_VIEW_PATH;
           link.target = "_blank";
           link.rel = "noopener noreferrer";
           link.download = "Shubham-Bisht-CV.pdf";
@@ -264,7 +260,7 @@ export function useTerminalRouter() {
 
           return [
             '<span class="text-[hsl(140,70%,50%)]">✓ Opening CV PDF...</span>',
-            `<span class="text-[hsl(180,70%,55%)]">Source: ${RESUME_PDF_PATH}</span>`,
+            `<span class="text-[hsl(180,70%,55%)]">Source: ${RESUME_VIEW_PATH}</span>`,
             '<span class="text-[hsl(220,10%,40%)]"># resume pdf saved...</span>',
           ];
         }

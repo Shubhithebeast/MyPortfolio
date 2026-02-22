@@ -75,17 +75,17 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background terminal-scanline">
+    <div className="h-screen overflow-hidden bg-background terminal-scanline flex flex-col">
       {/* Top bar */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-40"
+        className="border-b border-border bg-card/90 backdrop-blur-sm shrink-0"
       >
         <div className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 sm:gap-3 text-xl sm:text-2xl lg:text-3xl leading-tight">
             <span className="text-primary font-bold">⟩</span>
-            <span className="text-foreground font-bold">shubham-bisht-resume</span>
+            <span className="text-foreground font-bold">shubham-bisht-portfolio</span>
             <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">v2.0.0</span>
           </div>
           <div className="hidden md:flex items-center gap-3 text-xs text-muted-foreground">
@@ -98,18 +98,18 @@ const Index = () => {
       </motion.header>
 
       {/* Main content */}
-      <main className="w-full px-3 sm:px-4 py-5 sm:py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.55fr)_minmax(460px,1fr)] 2xl:grid-cols-[minmax(0,1.9fr)_minmax(520px,1.2fr)] gap-4 sm:gap-6 items-start">
-          <div className="min-w-0">
-            <div ref={terminalRef} id="section-terminal" className="xl:sticky xl:top-28">
+      <main className="w-full px-3 sm:px-4 py-3 sm:py-4 flex-1 overflow-hidden">
+        <div className="h-full grid grid-cols-1 xl:grid-cols-[minmax(0,1.55fr)_minmax(460px,1fr)] 2xl:grid-cols-[minmax(0,1.9fr)_minmax(520px,1.2fr)] gap-4 sm:gap-6 items-start">
+          <div className="min-w-0 min-h-0">
+            <div ref={terminalRef} id="section-terminal" className="h-full">
               <TerminalCLI onCommand={handleCommand} outputHistory={outputHistory} />
             </div>
           </div>
 
-          <div className="min-w-0 xl:sticky xl:top-28 xl:h-[calc(100vh-9.5rem)] xl:flex xl:flex-col xl:gap-3">
+          <div className="min-w-0 min-h-0 xl:h-full xl:flex xl:flex-col xl:gap-3">
             <IconSidebar embedded activeSection={activeSection} onSelect={handleSidebarSelect} visibleSections={visibleSections} />
             <div
-              className={`terminal-scanline xl:flex-1 xl:min-h-0 pr-1 ${
+              className={`terminal-scanline xl:flex-1 xl:min-h-0 pr-1 overflow-hidden ${
                 shouldScrollRightPanel ? "xl:overflow-y-auto" : "xl:overflow-y-hidden"
               }`}
             >
@@ -155,7 +155,7 @@ const Index = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="w-full flex items-center justify-center text-center text-xs text-muted-foreground h-16 border-t border-border"
+        className="w-full flex items-center justify-center text-center text-xs text-muted-foreground h-14 border-t border-border shrink-0"
       >
         <p>
           <span className="text-terminal-comment"># </span>
