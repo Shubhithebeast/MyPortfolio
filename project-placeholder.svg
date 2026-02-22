@@ -1,0 +1,9 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="450" rx="20" fill="#0F172A"/>
+  <rect x="20" y="20" width="760" height="410" rx="16" fill="#111827" stroke="#22C55E" stroke-opacity="0.35"/>
+  <path d="M60 320C135 230 210 240 285 300C360 360 435 370 510 300C585 230 660 220 740 280" stroke="#22C55E" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="150" cy="170" r="28" fill="#22C55E" fill-opacity="0.85"/>
+  <rect x="220" y="145" width="380" height="24" rx="12" fill="#22C55E" fill-opacity="0.3"/>
+  <rect x="220" y="182" width="300" height="18" rx="9" fill="#22C55E" fill-opacity="0.2"/>
+  <text x="60" y="90" fill="#86EFAC" font-family="JetBrains Mono, monospace" font-size="36" font-weight="700">PROJECT PREVIEW</text>
+</svg>
