@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
+import { runTerminalRag } from "@/lib/terminalRag";
 
-export type SectionId = "about" | "skills" | "experience" | "projects" | "education" | "achievements";
+export type SectionId = "about" | "skills" | "experience" | "projects" | "education" | "achievements" | "ai";
 
 const SECTION_MAP: Record<string, SectionId> = {
   about: "about",
@@ -9,23 +10,81 @@ const SECTION_MAP: Record<string, SectionId> = {
   projects: "projects",
   education: "education",
   achievements: "achievements",
+  ai: "ai",
 };
 
 const HELP_OUTPUT = [
   '<span class="text-[hsl(140,100%,50%)]">Available commands:</span>',
   '',
   '  <span class="text-[hsl(180,70%,55%)]">help</span>          — Show this help message',
+  '  <span class="text-[hsl(180,70%,55%)]">about</span>         — Show profile intro',
   '  <span class="text-[hsl(180,70%,55%)]">ls</span>            — List all sections',
   '  <span class="text-[hsl(180,70%,55%)]">cd &lt;section&gt;</span>  — Navigate to a section',
   '  <span class="text-[hsl(180,70%,55%)]">cat &lt;section&gt;</span> — Print section preview in terminal',
   '  <span class="text-[hsl(180,70%,55%)]">open &lt;section&gt;</span>— Open section on page',
   '  <span class="text-[hsl(180,70%,55%)]">showall</span>       — Show all sections',
+  '  <span class="text-[hsl(180,70%,55%)]">ai &lt;message&gt;</span>   — AI chat with portfolio RAG',
+  '  <span class="text-[hsl(180,70%,55%)]">chat &lt;message&gt;</span> — Alias for ai',
   '  <span class="text-[hsl(180,70%,55%)]">whoami</span>        — About me',
   '  <span class="text-[hsl(180,70%,55%)]">pwd</span>           — Print current directory',
-  '  <span class="text-[hsl(180,70%,55%)]">clear</span>         — Clear terminal',
+  '  <span class="text-[hsl(180,70%,55%)]">resume [--view|--download]</span> — Open/download CV PDF',
+  '  <span class="text-[hsl(180,70%,55%)]">clear</span>         — Clear terminal (with wipe animation)',
+  '  <span class="text-[hsl(180,70%,55%)]">reboot</span>        — Restart portfolio shell',
   '',
-  '<span class="text-[hsl(220,10%,40%)]"># Sections: about, skills, experience, projects, education, achievements</span>',
+  '<span class="text-[hsl(35,100%,55%)]">Hidden easter eggs:</span>',
+  '  <span class="text-[hsl(180,70%,55%)]">matrix</span>        — Green raining animation',
+  '  <span class="text-[hsl(180,70%,55%)]">top</span>           — Live skill usage stats',
+  '  <span class="text-[hsl(180,70%,55%)]">history</span>       — Fake command history',
+  '  <span class="text-[hsl(180,70%,55%)]">neofetch</span>      — ASCII profile card',
+  '',
+  '<span class="text-[hsl(220,10%,40%)]"># Sections: about, skills, experience, projects, education, achievements, ai</span>',
 ];
+
+const MATRIX_MARKER = "__EASTER_MATRIX__";
+const RESUME_PDF_PATH = "/resume.pdf";
+
+const HISTORY_OUTPUT = [
+  '  1  whoami',
+  '  2  help',
+  '  3  open projects',
+  '  4  cat skills',
+  '  5  top',
+  '  6  neofetch',
+  '  7  matrix',
+  '<span class="text-[hsl(220,10%,40%)]"># synthetic shell history · session replay mode</span>',
+];
+
+const NEOFETCH_OUTPUT = [
+  '<span class="text-[hsl(140,100%,50%)]">       .--.      </span> <span class="text-[hsl(140,100%,80%)]">shubham@portfolio</span>',
+  '<span class="text-[hsl(140,100%,50%)]">      |o_o |     </span> <span class="text-[hsl(180,70%,55%)]">OS:</span> Portfolio Linux 1.0',
+  '<span class="text-[hsl(140,100%,50%)]">      |:_/ |     </span> <span class="text-[hsl(180,70%,55%)]">Host:</span> Developer Workstation',
+  '<span class="text-[hsl(140,100%,50%)]">     //   \\ \\    </span> <span class="text-[hsl(180,70%,55%)]">Kernel:</span> 6.8.0-portfolio',
+  '<span class="text-[hsl(140,100%,50%)]">    (|     | )   </span> <span class="text-[hsl(180,70%,55%)]">Role:</span> Associate Software Engineer',
+  '<span class="text-[hsl(140,100%,50%)]">   /\_\___/_/\   </span> <span class="text-[hsl(180,70%,55%)]">Stack:</span> React · Node.js · MongoDB',
+  '<span class="text-[hsl(140,100%,50%)]">   \___)=(___/   </span> <span class="text-[hsl(180,70%,55%)]">Contact:</span> shubh17bisht@gmail.com',
+];
+
+function buildTopOutput() {
+  const now = new Date();
+  const uptimeMinutes = Math.floor(Math.random() * 240) + 40;
+  const api = Math.floor(Math.random() * 8) + 92;
+  const react = Math.floor(Math.random() * 10) + 88;
+  const dsa = Math.floor(Math.random() * 15) + 80;
+  const devops = Math.floor(Math.random() * 25) + 65;
+
+  return [
+    `<span class="text-[hsl(140,100%,50%)]">top - ${now.toLocaleTimeString()} up ${uptimeMinutes} mins, 1 user, load average: 0.21, 0.37, 0.42</span>`,
+    '<span class="text-[hsl(220,10%,55%)]">PID  USER      PR  NI  VIRT   RES   SHR  S  %CPU %MEM  TIME+    COMMAND</span>',
+    '4042 shubham   20   0  185m   46m   12m  R   4.7  2.2  00:12.11 skill-monitor',
+    '4201 shubham   20   0  256m   72m   18m  S   3.8  3.1  00:09.34 project-engine',
+    '',
+    '<span class="text-[hsl(35,100%,55%)]">Live Skill Usage</span>',
+    `<span class="text-[hsl(180,70%,55%)]">API Design      </span> [${"█".repeat(Math.floor(api / 10))}${"░".repeat(10 - Math.floor(api / 10))}] ${api}%`,
+    `<span class="text-[hsl(180,70%,55%)]">React Systems   </span> [${"█".repeat(Math.floor(react / 10))}${"░".repeat(10 - Math.floor(react / 10))}] ${react}%`,
+    `<span class="text-[hsl(180,70%,55%)]">DSA/Problem Sol </span> [${"█".repeat(Math.floor(dsa / 10))}${"░".repeat(10 - Math.floor(dsa / 10))}] ${dsa}%`,
+    `<span class="text-[hsl(180,70%,55%)]">DevOps/Infra    </span> [${"█".repeat(Math.floor(devops / 10))}${"░".repeat(10 - Math.floor(devops / 10))}] ${devops}%`,
+  ];
+}
 
 const LS_OUTPUT = [
   '<span class="text-[hsl(210,80%,60%)]">drwxr-xr-x</span>  shubham  <span class="text-[hsl(140,70%,50%)]">about/</span>',
@@ -34,12 +93,16 @@ const LS_OUTPUT = [
   '<span class="text-[hsl(210,80%,60%)]">drwxr-xr-x</span>  shubham  <span class="text-[hsl(140,70%,50%)]">projects/</span>',
   '<span class="text-[hsl(210,80%,60%)]">drwxr-xr-x</span>  shubham  <span class="text-[hsl(140,70%,50%)]">education/</span>',
   '<span class="text-[hsl(210,80%,60%)]">drwxr-xr-x</span>  shubham  <span class="text-[hsl(140,70%,50%)]">achievements/</span>',
+  '<span class="text-[hsl(210,80%,60%)]">drwxr-xr-x</span>  shubham  <span class="text-[hsl(140,70%,50%)]">ai/</span>',
 ];
 
 const WHOAMI_OUTPUT = [
-  '<span class="text-[hsl(140,100%,50%)]">Shubham Bisht</span>',
-  'Associate Software Engineer @ Opentext',
+  '<span class="text-[hsl(220,10%,40%)]">────────────────────────────</span>',
+  '<span class="text-[28px] font-extrabold leading-none text-[hsl(140,100%,50%)]">SHUBHAM BISHT</span>',
+  '<span class="text-base font-bold text-[hsl(35,100%,55%)]">Associate Software Engineer @ OpenText</span>',
+  '<span class="font-semibold text-[hsl(140,100%,75%)]">This portfolio belongs to Shubham Bisht.</span>',
   '<span class="text-[hsl(180,70%,55%)]">shubh17bisht@gmail.com</span> | <span class="text-[hsl(180,70%,55%)]">github.com/Shubhithebeast</span>',
+  '<span class="text-[hsl(220,10%,40%)]">────────────────────────────</span>',
 ];
 
 const SECTION_PREVIEW: Record<SectionId, string[]> = {
@@ -79,12 +142,19 @@ const SECTION_PREVIEW: Record<SectionId, string[]> = {
     'Professional and project milestones across backend and full-stack work',
     'Consistent delivery on feature ownership, quality, and collaboration',
   ],
+  ai: [
+    '<span class="text-[hsl(140,70%,50%)]">ask-to-ai.chat</span>',
+    'Open the Ask to AI panel from sidebar to ask portfolio questions.',
+    'Example: is he making any project related to pahadi language?',
+  ],
 };
 
 export function useTerminalRouter() {
   const [visibleSections, setVisibleSections] = useState<SectionId[]>(["about"]);
+  const [activeSection, setActiveSection] = useState<SectionId>("about");
   const [currentDir, setCurrentDir] = useState("~");
   const [outputHistory, setOutputHistory] = useState<{ input: string; output: string[] }[]>([
+    { input: "whoami", output: WHOAMI_OUTPUT },
     { input: "help", output: HELP_OUTPUT },
   ]);
 
@@ -93,6 +163,7 @@ export function useTerminalRouter() {
   }, []);
 
   const showSection = useCallback((id: SectionId) => {
+    setActiveSection(id);
     setVisibleSections((prev) => {
       if (prev.includes(id)) return prev;
       return [...prev, id];
@@ -100,12 +171,13 @@ export function useTerminalRouter() {
   }, []);
 
   const showAllSections = useCallback(() => {
-    setVisibleSections(["about", "skills", "experience", "projects", "education", "achievements"]);
+    setVisibleSections(["about", "skills", "experience", "projects", "education", "achievements", "ai"]);
   }, []);
 
   const resetView = useCallback(() => {
     setOutputHistory([]);
     setVisibleSections(["about"]);
+    setActiveSection("about");
     setCurrentDir("~");
   }, []);
 
@@ -114,6 +186,7 @@ export function useTerminalRouter() {
       const parts = raw.trim().split(/\s+/);
       const cmd = parts[0].toLowerCase();
       const arg = parts[1]?.toLowerCase();
+      const fullArg = parts.slice(1).join(" ").trim();
 
       switch (cmd) {
         case "help":
@@ -125,13 +198,91 @@ export function useTerminalRouter() {
         case "pwd":
           return [`<span class="text-[hsl(280,70%,65%)]">${currentDir}</span>`];
 
+        case "about":
         case "whoami":
           showSection("about");
           return WHOAMI_OUTPUT;
 
+        case "ai":
+        case "chat": {
+          showSection("ai");
+          if (!fullArg) {
+            return runTerminalRag("");
+          }
+          return runTerminalRag(fullArg);
+        }
+
+        case "matrix":
+          return [
+            '<span class="text-[hsl(140,100%,50%)]">Entering matrix mode...</span>',
+            MATRIX_MARKER,
+            '<span class="text-[hsl(220,10%,40%)]"># press any command to continue</span>',
+          ];
+
+        case "top":
+          return buildTopOutput();
+
+        case "history":
+          return HISTORY_OUTPUT;
+
+        case "neofetch":
+          return NEOFETCH_OUTPUT;
+
+        case "resume": {
+          if (arg === "--view") {
+            window.open(RESUME_PDF_PATH, "_blank", "noopener,noreferrer");
+            return [
+              '<span class="text-[hsl(140,70%,50%)]">✓ Opening CV in new tab...</span>',
+              `<span class="text-[hsl(180,70%,55%)]">Source: ${RESUME_PDF_PATH}</span>`,
+            ];
+          }
+
+          if (arg === "--download") {
+            const downloadLink = document.createElement("a");
+            downloadLink.href = RESUME_PDF_PATH;
+            downloadLink.download = "Shubham-Bisht-CV.pdf";
+            downloadLink.click();
+            return [
+              '<span class="text-[hsl(140,70%,50%)]">✓ Downloading CV PDF...</span>',
+              `<span class="text-[hsl(180,70%,55%)]">Source: ${RESUME_PDF_PATH}</span>`,
+            ];
+          }
+
+          if (arg && arg !== "--view" && arg !== "--download") {
+            return [
+              '<span class="text-[hsl(0,80%,60%)]">Usage: resume [--view|--download]</span>',
+              '<span class="text-[hsl(220,10%,40%)]"># default: open + download</span>',
+            ];
+          }
+
+          const link = document.createElement("a");
+          link.href = RESUME_PDF_PATH;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.download = "Shubham-Bisht-CV.pdf";
+          link.click();
+
+          return [
+            '<span class="text-[hsl(140,70%,50%)]">✓ Opening CV PDF...</span>',
+            `<span class="text-[hsl(180,70%,55%)]">Source: ${RESUME_PDF_PATH}</span>`,
+            '<span class="text-[hsl(220,10%,40%)]"># resume pdf saved...</span>',
+          ];
+        }
+
         case "clear":
           resetView();
           return [];
+
+        case "reboot":
+          window.localStorage.removeItem("portfolio:lastLoginAt");
+          window.setTimeout(() => {
+            window.location.reload();
+          }, 420);
+          return [
+            '<span class="text-[hsl(35,100%,55%)]">Rebooting portfolio runtime...</span>',
+            '<span class="text-[hsl(220,10%,40%)]">[OK] session cache cleared</span>',
+            '<span class="text-[hsl(220,10%,40%)]">[OK] relaunching boot sequence</span>',
+          ];
 
         case "cd": {
           if (!arg || arg === "~") {
@@ -202,6 +353,7 @@ export function useTerminalRouter() {
 
   return {
     visibleSections,
+    activeSection,
     outputHistory,
     handleCommand,
     showSection,

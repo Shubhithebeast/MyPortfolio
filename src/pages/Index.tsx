@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import HeroSection from "../components/HeroSection";
 import SkillsSection from "../components/SkillsSection";
@@ -8,7 +8,13 @@ import EducationSection from "../components/EducationSection";
 import AchievementsSection from "../components/AchievementsSection";
 import TerminalCLI from "../components/TerminalCLI";
 import IconSidebar from "../components/IconSidebar";
+import ShowcasePanel from "../components/ShowcasePanel";
+import LinuxBootScreen from "../components/LinuxBootScreen";
+import AIChatPanel from "../components/AIChatPanel";
 import { useTerminalRouter, SectionId } from "../hooks/useTerminalRouter";
+
+const RECENT_LOGIN_KEY = "portfolio:lastLoginAt";
+const RECENT_LOGIN_WINDOW_MS = 1000 * 60 * 60 * 24;
 
 const sectionComponents: Record<SectionId, React.FC> = {
   about: HeroSection,
@@ -17,6 +23,7 @@ const sectionComponents: Record<SectionId, React.FC> = {
   projects: ProjectsSection,
   education: EducationSection,
   achievements: AchievementsSection,
+  ai: AIChatPanel,
 };
 
 const sectionOrder: SectionId[] = [
@@ -26,18 +33,32 @@ const sectionOrder: SectionId[] = [
   "projects",
   "education",
   "achievements",
+  "ai",
 ];
 
 const Index = () => {
-  const { visibleSections, outputHistory, handleCommand, showSection } =
+  const { visibleSections, activeSection, outputHistory, handleCommand, showSection } =
     useTerminalRouter();
+  const shouldScrollRightPanel = activeSection === "projects";
   const terminalRef = useRef<HTMLDivElement>(null);
+  const [showBoot, setShowBoot] = useState(false);
+  const [bootCheckDone, setBootCheckDone] = useState(false);
+
+  useEffect(() => {
+    const lastLoginValue = window.localStorage.getItem(RECENT_LOGIN_KEY);
+    const lastLoginTime = lastLoginValue ? Number(lastLoginValue) : 0;
+    const isRecentLogin = Number.isFinite(lastLoginTime) && Date.now() - lastLoginTime < RECENT_LOGIN_WINDOW_MS;
+
+    setShowBoot(!isRecentLogin);
+    setBootCheckDone(true);
+  }, []);
+
+  const completeBootSequence = () => {
+    window.localStorage.setItem(RECENT_LOGIN_KEY, String(Date.now()));
+    setShowBoot(false);
+  };
 
   const handleSidebarSelect = (id: string) => {
-    if (id === "terminal") {
-      terminalRef.current?.scrollIntoView({ behavior: "smooth" });
-      return;
-    }
     const sectionId = id as SectionId;
     showSection(sectionId);
     setTimeout(() => {
@@ -45,30 +66,31 @@ const Index = () => {
     }, 100);
   };
 
+  if (!bootCheckDone) {
+    return null;
+  }
+
+  if (showBoot) {
+    return <LinuxBootScreen onComplete={completeBootSequence} />;
+  }
+
   return (
     <div className="min-h-screen bg-background terminal-scanline">
-      {/* Icon sidebar */}
-      <IconSidebar
-        activeSection={null}
-        onSelect={handleSidebarSelect}
-        visibleSections={visibleSections}
-      />
-
       {/* Top bar */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-40"
       >
-        <div className="max-w-4xl mx-auto px-4 py-5 flex items-center justify-between pl-14">
-          <div className="flex items-center gap-3 text-3xl">
+        <div className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 text-xl sm:text-2xl lg:text-3xl leading-tight">
             <span className="text-primary font-bold">⟩</span>
             <span className="text-foreground font-bold">shubham-bisht-resume</span>
-            <span className="text-muted-foreground text-sm">v2.0.0</span>
+            <span className="text-muted-foreground text-[10px] sm:text-xs lg:text-sm">v2.0.0</span>
           </div>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="hidden sm:inline">interactive mode</span>
-            <span className="hidden sm:inline">|</span>
+          <div className="hidden md:flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="hidden lg:inline">interactive mode</span>
+            <span className="hidden lg:inline">|</span>
             <span>type <span className="text-primary">help</span> below</span>
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
           </div>
@@ -76,33 +98,56 @@ const Index = () => {
       </motion.header>
 
       {/* Main content */}
-      <main className="max-w-4xl mx-auto px-4 py-8 space-y-6 pl-14 md:pl-4 ml-0 md:ml-8">
-        {/* Terminal CLI */}
-        <div ref={terminalRef} id="section-terminal">
-          <TerminalCLI onCommand={handleCommand} outputHistory={outputHistory} />
+      <main className="w-full px-3 sm:px-4 py-5 sm:py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.55fr)_minmax(460px,1fr)] 2xl:grid-cols-[minmax(0,1.9fr)_minmax(520px,1.2fr)] gap-4 sm:gap-6 items-start">
+          <div className="min-w-0">
+            <div ref={terminalRef} id="section-terminal" className="xl:sticky xl:top-28">
+              <TerminalCLI onCommand={handleCommand} outputHistory={outputHistory} />
+            </div>
+          </div>
+
+          <div className="min-w-0 xl:sticky xl:top-28 xl:h-[calc(100vh-9.5rem)] xl:flex xl:flex-col xl:gap-3">
+            <IconSidebar embedded activeSection={activeSection} onSelect={handleSidebarSelect} visibleSections={visibleSections} />
+            <div
+              className={`terminal-scanline xl:flex-1 xl:min-h-0 pr-1 ${
+                shouldScrollRightPanel ? "xl:overflow-y-auto" : "xl:overflow-y-hidden"
+              }`}
+            >
+              <AnimatePresence mode="wait">
+                {activeSection === "projects" ? (
+                  <motion.div
+                    key="preview-projects"
+                    id="section-projects"
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ShowcasePanel projectsActive />
+                  </motion.div>
+                ) : (
+                  sectionOrder
+                    .filter((id) => id === activeSection)
+                    .map((id) => {
+                      const Component = sectionComponents[id];
+                      return (
+                        <motion.div
+                          key={`preview-${id}`}
+                          id={`section-${id}`}
+                          initial={{ opacity: 0, y: 14 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <Component />
+                        </motion.div>
+                      );
+                    })
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
-
-        {/* Sections appear as user navigates */}
-        <AnimatePresence>
-          {sectionOrder
-            .filter((id) => visibleSections.includes(id))
-            .map((id) => {
-              const Component = sectionComponents[id];
-              return (
-                <motion.div
-                  key={id}
-                  id={`section-${id}`}
-                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <Component />
-                </motion.div>
-              );
-            })}
-        </AnimatePresence>
-
       </main>
 
       {/* Footer */}

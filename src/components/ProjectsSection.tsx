@@ -1,78 +1,56 @@
 import { motion } from "framer-motion";
 import TerminalWindow from "./TerminalWindow";
 import TerminalLine from "./TerminalLine";
-import { FolderGit2 } from "lucide-react";
-
-const projects = [
-  {
-    name: "PahadiLingo",
-    desc: "Cultural Language Learning Platform",
-    tech: ["React.js", "Firebase"],
-    period: "Sept 2023 – Present",
-    bullets: [
-      "Cross-platform React.js web app promoting Pahadi language and culture.",
-      "Firebase auth and real-time database for secure content management.",
-      "Search and favorites functionality for quick word lookup.",
-      "Scalable architecture supporting 50+ active community contributors.",
-    ],
-  },
-  {
-    name: "VideoTube",
-    desc: "Video Streaming Backend Platform",
-    tech: ["Node.js", "MongoDB", "Express.js"],
-    period: "Dec 2024 – Present",
-    bullets: [
-      "Scalable REST API (35+ routes) with JWT auth and role-based access control.",
-      "Optimized MongoDB queries with aggregation pipelines, improving response time 40%.",
-      "Secure file upload with Multer for video and image processing.",
-    ],
-  },
-];
+import { ExternalLink, PlayCircle } from "lucide-react";
+import { portfolioProjects } from "../data/projects";
 
 const ProjectsSection = () => {
   return (
     <TerminalWindow title="shubham@portfolio: ~/projects" delay={0.4}>
-      <TerminalLine command="ls -la ~/projects/" path="~/projects" delay={0.5} />
+      <TerminalLine command="open projects" path="~/projects" delay={0.5} />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 0.5 }}
-        className="mt-3 space-y-5"
+        className="mt-3 border border-border rounded-md bg-muted/20 p-3"
       >
-        {projects.map((project, pi) => (
-          <motion.div
-            key={project.name}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 + pi * 0.2 }}
-            className="border border-border rounded-md p-4 bg-muted/30 hover:bg-muted/60 transition-colors"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <FolderGit2 size={16} className="text-terminal-green" />
-              <h3 className="font-semibold text-primary">{project.name}</h3>
-              <span className="text-muted-foreground text-xs">– {project.desc}</span>
-            </div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs text-muted-foreground">{project.period}</span>
-              <span className="text-muted-foreground">|</span>
-              <div className="flex gap-1.5">
-                {project.tech.map((t) => (
-                  <span key={t} className="text-xs px-1.5 py-0.5 rounded-sm bg-border text-terminal-blue">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-1 text-sm">
-              {project.bullets.map((b, i) => (
-                <div key={i} className="flex gap-2">
-                  <span className="text-terminal-green shrink-0">$</span>
-                  <span className="text-card-foreground">{b}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {portfolioProjects.map((project, index) => (
+            <motion.a
+              key={project.name}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 + index * 0.08 }}
+              className="group block rounded-md border border-border bg-card hover:bg-muted/60 hover:border-primary/50 transition-colors overflow-hidden"
+            >
+              <div className="relative h-36 border-b border-border bg-black/30">
+                <img src={project.image} alt={`${project.name} preview`} className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-background/65 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                  <span className="text-terminal-cyan text-xs flex items-center gap-1"><ExternalLink size={14} />Visit</span>
+                  <span className="text-terminal-cyan text-xs flex items-center gap-1"><PlayCircle size={14} />Preview</span>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+              </div>
+
+              <div className="p-3 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="font-semibold text-primary">{project.name}</h3>
+                  <span className="text-[11px] text-muted-foreground">{project.period}</span>
+                </div>
+                <p className="text-xs text-muted-foreground">{project.desc}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {project.tech.map((technology) => (
+                    <span key={technology} className="text-[11px] px-1.5 py-0.5 rounded-sm bg-border text-terminal-blue">
+                      {technology}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.a>
+          ))}
+        </div>
       </motion.div>
     </TerminalWindow>
   );
