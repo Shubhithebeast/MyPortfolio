@@ -10,6 +10,7 @@ import {
   Eye,
   Download,
 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const sections = [
   { id: "about", icon: User, label: "About" },
@@ -20,6 +21,8 @@ const sections = [
   { id: "achievements", icon: Trophy, label: "Achievements" },
   { id: "ai", icon: Sparkles, label: "Ask to AI" },
 ];
+
+const staticBase = import.meta.env.BASE_URL;
 
 interface IconSidebarProps {
   activeSection: string | null;
@@ -35,8 +38,8 @@ const IconSidebar = ({
   onSelect,
   visibleSections,
   embedded = false,
-  resumeViewPath = "/resume-view.html",
-  resumePdfPath = "/resume.pdf",
+  resumeViewPath = `${staticBase}resume-view.html`,
+  resumePdfPath = `${staticBase}resume.pdf`,
 }: IconSidebarProps) => {
   return (
     <motion.nav
@@ -44,7 +47,7 @@ const IconSidebar = ({
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4 }}
       className={embedded
-        ? "flex flex-nowrap items-center gap-1 p-1.5 sm:p-2 bg-card/90 border-b border-border"
+        ? "relative z-20 overflow-visible flex flex-nowrap items-center gap-1 p-1.5 sm:p-2 bg-card/90 border-b border-border"
         : "fixed left-0 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-1 p-2 bg-card/90 backdrop-blur-sm border border-border rounded-r-lg shadow-lg"
       }
     >
@@ -52,27 +55,32 @@ const IconSidebar = ({
         const isActive = activeSection === s.id;
         const isVisible = visibleSections.includes(s.id);
         return (
-          <button
-            key={s.id}
-            onClick={() => onSelect(s.id)}
-            title={s.label}
-            className={`group relative p-2 sm:p-2.5 rounded-md transition-all duration-200 ${
-              isActive
-                ? "bg-primary text-primary-foreground"
-                : isVisible
-                ? "text-foreground hover:bg-muted"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            }`}
-          >
-            <s.icon size={18} />
-            {/* Tooltip */}
-            <span className={`${embedded ? "bottom-full mb-2 left-1/2 -translate-x-1/2 z-20" : "left-full ml-2"} absolute px-2 py-1 text-xs bg-card border border-border rounded-md text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity`}>
+          <Tooltip key={s.id}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => onSelect(s.id)}
+                title={s.label}
+                className={`group relative p-2 sm:p-2.5 rounded-md transition-all duration-200 ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : isVisible
+                    ? "text-foreground hover:bg-muted"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                <s.icon size={18} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side={embedded ? "top" : "right"}
+              align="center"
+              sideOffset={8}
+              className="z-[90] px-2 py-1 text-xs bg-card border border-border rounded-md shadow-md text-foreground"
+            >
               {s.label}
-              {!isVisible && (
-                <span className="text-muted-foreground ml-1">(click to show)</span>
-              )}
-            </span>
-          </button>
+              {!isVisible && <span className="text-muted-foreground ml-1">(click to show)</span>}
+            </TooltipContent>
+          </Tooltip>
         );
       })}
 

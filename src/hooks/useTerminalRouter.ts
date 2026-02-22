@@ -41,6 +41,7 @@ const HELP_OUTPUT = [
 ];
 
 const MATRIX_MARKER = "__EASTER_MATRIX__";
+const PROFILE_IMAGE_PATH = `${import.meta.env.BASE_URL}mypic.png`;
 const RESUME_PDF_PATH = "/resume.pdf";
 const RESUME_VIEW_PATH = "/resume-view.html";
 
@@ -98,7 +99,7 @@ const LS_OUTPUT = [
 ];
 
 const WHOAMI_OUTPUT = [
-  `<div style="white-space:normal;border-top:1px solid hsl(220,10%,30%);border-bottom:1px solid hsl(220,10%,30%);padding:10px 0;"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start;"><div style="min-width:240px;flex:1 1 320px;line-height:1.2;"><div style="font-size:28px;font-weight:800;color:hsl(140,100%,50%);">SHUBHAM BISHT</div><div style="margin-top:4px;font-size:16px;font-weight:700;color:hsl(35,100%,55%);">Associate Software Engineer @ OpenText</div><div style="margin-top:4px;font-size:14px;font-weight:600;color:hsl(140,100%,75%);">This portfolio belongs to Shubham Bisht.</div><div style="margin-top:4px;font-size:14px;color:hsl(180,70%,55%);">shubhambisht703@gmail.com <span style="color:hsl(220,10%,55%);">|</span> github.com/Shubhithebeast</div></div><div style="width:104px;height:104px;border:1px solid hsl(140,30%,20%);border-radius:10px;overflow:hidden;background:hsl(220,16%,10%);flex:0 0 104px;"><img src="/mypic.png" alt="Shubham profile" style="width:100%;height:100%;object-fit:cover;object-position:center 28%;" /></div></div></div>`,
+  `<div style="white-space:normal;border-top:1px solid hsl(220,10%,30%);border-bottom:1px solid hsl(220,10%,30%);padding:10px 0;"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start;"><div style="min-width:240px;flex:1 1 320px;line-height:1.2;"><div style="font-size:28px;font-weight:800;color:hsl(140,100%,50%);">SHUBHAM BISHT</div><div style="margin-top:4px;font-size:16px;font-weight:700;color:hsl(35,100%,55%);">Associate Software Engineer @ OpenText</div><div style="margin-top:4px;font-size:14px;font-weight:600;color:hsl(140,100%,75%);">This portfolio belongs to Shubham Bisht.</div><div style="margin-top:4px;font-size:14px;color:hsl(180,70%,55%);">shubhambisht703@gmail.com <span style="color:hsl(220,10%,55%);">|</span> github.com/Shubhithebeast</div></div><div style="width:104px;height:104px;border:1px solid hsl(140,30%,20%);border-radius:10px;overflow:hidden;background:hsl(220,16%,10%);flex:0 0 104px;"><img src="${PROFILE_IMAGE_PATH}" alt="Shubham profile" style="width:100%;height:100%;object-fit:cover;object-position:center 28%;" /></div></div></div>`,
 ];
 
 const SECTION_PREVIEW: Record<SectionId, string[]> = {
