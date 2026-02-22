@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 18% 7%;
+    --foreground: 140 100% 80%;
+
+    --card: 220 16% 10%;
+    --card-foreground: 140 60% 75%;
+
+    --popover: 220 16% 10%;
+    --popover-foreground: 140 60% 75%;
+
+    --primary: 140 100% 50%;
+    --primary-foreground: 220 18% 7%;
+
+    --secondary: 35 100% 55%;
+    --secondary-foreground: 220 18% 7%;
+
+    --muted: 220 14% 14%;
+    --muted-foreground: 220 10% 55%;
+
+    --accent: 200 80% 55%;
+    --accent-foreground: 220 18% 7%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 140 30% 20%;
+    --input: 220 14% 14%;
+    --ring: 140 100% 50%;
+
+    --radius: 0.5rem;
+
+    --terminal-red: 0 80% 60%;
+    --terminal-yellow: 45 100% 60%;
+    --terminal-green: 140 70% 50%;
+    --terminal-blue: 210 80% 60%;
+    --terminal-purple: 280 70% 65%;
+    --terminal-cyan: 180 70% 55%;
+    --terminal-comment: 220 10% 40%;
+
+    --sidebar-background: 220 16% 10%;
+    --sidebar-foreground: 140 60% 75%;
+    --sidebar-primary: 140 100% 50%;
+    --sidebar-primary-foreground: 220 18% 7%;
+    --sidebar-accent: 220 14% 14%;
+    --sidebar-accent-foreground: 140 60% 75%;
+    --sidebar-border: 140 30% 20%;
+    --sidebar-ring: 140 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  ::selection {
+    background: hsl(140 100% 50% / 0.3);
+    color: hsl(140 100% 90%);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.2);
+  }
+
+  .terminal-scanline {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(140 100% 50% / 0.03) 2px,
+      hsl(140 100% 50% / 0.03) 4px
+    );
+  }
+
+  .cursor-blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+}
