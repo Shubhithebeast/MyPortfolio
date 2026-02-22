@@ -17,8 +17,8 @@ const HELP_OUTPUT = [
   '  <span class="text-[hsl(180,70%,55%)]">help</span>          — Show this help message',
   '  <span class="text-[hsl(180,70%,55%)]">ls</span>            — List all sections',
   '  <span class="text-[hsl(180,70%,55%)]">cd &lt;section&gt;</span>  — Navigate to a section',
-  '  <span class="text-[hsl(180,70%,55%)]">cat &lt;section&gt;</span> — Display section content',
-  '  <span class="text-[hsl(180,70%,55%)]">open &lt;section&gt;</span>— Show section on page',
+  '  <span class="text-[hsl(180,70%,55%)]">cat &lt;section&gt;</span> — Print section preview in terminal',
+  '  <span class="text-[hsl(180,70%,55%)]">open &lt;section&gt;</span>— Open section on page',
   '  <span class="text-[hsl(180,70%,55%)]">showall</span>       — Show all sections',
   '  <span class="text-[hsl(180,70%,55%)]">whoami</span>        — About me',
   '  <span class="text-[hsl(180,70%,55%)]">pwd</span>           — Print current directory',
@@ -42,6 +42,45 @@ const WHOAMI_OUTPUT = [
   '<span class="text-[hsl(180,70%,55%)]">shubh17bisht@gmail.com</span> | <span class="text-[hsl(180,70%,55%)]">github.com/Shubhithebeast</span>',
 ];
 
+const SECTION_PREVIEW: Record<SectionId, string[]> = {
+  about: [
+    '<span class="text-[hsl(140,70%,50%)]">about.txt</span>',
+    'Name: Shubham Bisht',
+    'Role: Associate Software Engineer @ OpenText',
+    'Focus: Full-stack development, APIs, and scalable backend systems',
+    'Contact: shubh17bisht@gmail.com | 8699391033 | github.com/Shubhithebeast',
+  ],
+  skills: [
+    '<span class="text-[hsl(140,70%,50%)]">skills.conf</span>',
+    'Languages: Java, JavaScript, Python, C++, SQL',
+    'Backend: Node.js, Express.js, REST APIs, JWT auth',
+    'Frontend: React.js, responsive UI patterns',
+    'Database/Tools: MongoDB, Firebase, Git/GitHub',
+  ],
+  experience: [
+    '<span class="text-[hsl(140,70%,50%)]">experience.log</span>',
+    'Current: Associate Software Engineer @ OpenText',
+    'Built and maintained production-grade backend and integration workflows',
+    'Improved API performance and reliability through optimization and testing',
+  ],
+  projects: [
+    '<span class="text-[hsl(140,70%,50%)]">projects.json</span>',
+    'PahadiLingo: Cultural language learning platform (React + Firebase)',
+    'VideoTube: Scalable video backend with auth, upload, and REST endpoints',
+    'Highlights: Search/favorites, role-based access, optimized DB queries',
+  ],
+  education: [
+    '<span class="text-[hsl(140,70%,50%)]">education.md</span>',
+    'Degree and core academic background in computer science/engineering',
+    'Strong foundation in DSA, DBMS, OOP, operating systems, and networking',
+  ],
+  achievements: [
+    '<span class="text-[hsl(140,70%,50%)]">achievements.md</span>',
+    'Professional and project milestones across backend and full-stack work',
+    'Consistent delivery on feature ownership, quality, and collaboration',
+  ],
+};
+
 export function useTerminalRouter() {
   const [visibleSections, setVisibleSections] = useState<SectionId[]>(["about"]);
   const [currentDir, setCurrentDir] = useState("~");
@@ -62,6 +101,12 @@ export function useTerminalRouter() {
 
   const showAllSections = useCallback(() => {
     setVisibleSections(["about", "skills", "experience", "projects", "education", "achievements"]);
+  }, []);
+
+  const resetView = useCallback(() => {
+    setOutputHistory([]);
+    setVisibleSections(["about"]);
+    setCurrentDir("~");
   }, []);
 
   const processCommand = useCallback(
@@ -85,7 +130,7 @@ export function useTerminalRouter() {
           return WHOAMI_OUTPUT;
 
         case "clear":
-          setOutputHistory([]);
+          resetView();
           return [];
 
         case "cd": {
@@ -102,7 +147,17 @@ export function useTerminalRouter() {
           return [`<span class="text-[hsl(0,80%,60%)]">bash: cd: ${arg}: No such directory</span>`];
         }
 
-        case "cat":
+        case "cat": {
+          if (!arg) {
+            return [`<span class="text-[hsl(0,80%,60%)]">Usage: ${cmd} &lt;section&gt;</span>`];
+          }
+          const section = SECTION_MAP[arg];
+          if (section) {
+            return SECTION_PREVIEW[section];
+          }
+          return [`<span class="text-[hsl(0,80%,60%)]">${cmd}: ${arg}: No such file or directory</span>`];
+        }
+
         case "open": {
           if (!arg) {
             return [`<span class="text-[hsl(0,80%,60%)]">Usage: ${cmd} &lt;section&gt;</span>`];
@@ -129,20 +184,20 @@ export function useTerminalRouter() {
           ];
       }
     },
-    [currentDir, showSection, showAllSections]
+    [currentDir, showSection, showAllSections, resetView]
   );
 
   const handleCommand = useCallback(
     (raw: string) => {
       if (raw.trim().toLowerCase() === "clear") {
-        setOutputHistory([]);
+        resetView();
         return [];
       }
       const output = processCommand(raw);
       addOutput(raw, output);
       return output;
     },
-    [processCommand, addOutput]
+    [processCommand, addOutput, resetView]
   );
 
   return {

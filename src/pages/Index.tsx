@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import HeroSection from "../components/HeroSection";
 import SkillsSection from "../components/SkillsSection";
@@ -5,6 +6,7 @@ import ExperienceSection from "../components/ExperienceSection";
 import ProjectsSection from "../components/ProjectsSection";
 import EducationSection from "../components/EducationSection";
 import AchievementsSection from "../components/AchievementsSection";
+import TerminalCLI from "../components/TerminalCLI";
 import IconSidebar from "../components/IconSidebar";
 import { useTerminalRouter, SectionId } from "../hooks/useTerminalRouter";
 
@@ -27,9 +29,15 @@ const sectionOrder: SectionId[] = [
 ];
 
 const Index = () => {
-  const { visibleSections, showSection } = useTerminalRouter();
+  const { visibleSections, outputHistory, handleCommand, showSection } =
+    useTerminalRouter();
+  const terminalRef = useRef<HTMLDivElement>(null);
 
   const handleSidebarSelect = (id: string) => {
+    if (id === "terminal") {
+      terminalRef.current?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
     const sectionId = id as SectionId;
     showSection(sectionId);
     setTimeout(() => {
@@ -52,16 +60,16 @@ const Index = () => {
         animate={{ opacity: 1, y: 0 }}
         className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-40"
       >
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between pl-14">
-          <div className="flex items-center gap-2 text-sm">
+        <div className="max-w-4xl mx-auto px-4 py-5 flex items-center justify-between pl-14">
+          <div className="flex items-center gap-3 text-3xl">
             <span className="text-primary font-bold">⟩</span>
-            <span className="text-foreground">shubham-bisht-resume</span>
-            <span className="text-muted-foreground text-xs">v2.0.0</span>
+            <span className="text-foreground font-bold">shubham-bisht-resume</span>
+            <span className="text-muted-foreground text-sm">v2.0.0</span>
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="hidden sm:inline">portfolio mode</span>
+            <span className="hidden sm:inline">interactive mode</span>
             <span className="hidden sm:inline">|</span>
-            <span>use sidebar to navigate</span>
+            <span>type <span className="text-primary">help</span> below</span>
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
           </div>
         </div>
@@ -69,6 +77,11 @@ const Index = () => {
 
       {/* Main content */}
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-6 pl-14 md:pl-4 ml-0 md:ml-8">
+        {/* Terminal CLI */}
+        <div ref={terminalRef} id="section-terminal">
+          <TerminalCLI onCommand={handleCommand} outputHistory={outputHistory} />
+        </div>
+
         {/* Sections appear as user navigates */}
         <AnimatePresence>
           {sectionOrder
@@ -90,21 +103,22 @@ const Index = () => {
             })}
         </AnimatePresence>
 
-        {/* Footer */}
-        <motion.footer
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-center text-xs text-muted-foreground py-6 border-t border-border"
-        >
-          <p>
-            <span className="text-terminal-comment"># </span>
-            Built with ❤️ by Shubham Bisht
-            <span className="text-terminal-comment"> | </span>
-            <span className="text-primary">exit 0</span>
-          </p>
-        </motion.footer>
       </main>
+
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="w-full flex items-center justify-center text-center text-xs text-muted-foreground h-16 border-t border-border"
+      >
+        <p>
+          <span className="text-terminal-comment"># </span>
+          Built with ❤️ by Shubham Bisht
+          <span className="text-terminal-comment"> | </span>
+          <span className="text-primary">exit 0</span>
+        </p>
+      </motion.footer>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import {
   FolderGit2,
   GraduationCap,
   Trophy,
+  Terminal,
 } from "lucide-react";
 
 const sections = [
@@ -15,6 +16,7 @@ const sections = [
   { id: "projects", icon: FolderGit2, label: "Projects" },
   { id: "education", icon: GraduationCap, label: "Education" },
   { id: "achievements", icon: Trophy, label: "Achievements" },
+  { id: "terminal", icon: Terminal, label: "Terminal" },
 ];
 
 interface IconSidebarProps {
@@ -51,7 +53,7 @@ const IconSidebar = ({ activeSection, onSelect, visibleSections }: IconSidebarPr
             {/* Tooltip */}
             <span className="absolute left-full ml-2 px-2 py-1 text-xs bg-card border border-border rounded-md text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
               {s.label}
-              {!isVisible && (
+              {s.id !== "terminal" && !isVisible && (
                 <span className="text-muted-foreground ml-1">(click to show)</span>
               )}
             </span>

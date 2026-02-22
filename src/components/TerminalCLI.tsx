@@ -11,6 +11,7 @@ const TerminalCLI = ({ onCommand, outputHistory }: TerminalCLIProps) => {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [cursorPos, setCursorPos] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -18,18 +19,25 @@ const TerminalCLI = ({ onCommand, outputHistory }: TerminalCLIProps) => {
     scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
   }, [outputHistory]);
 
+  const syncCursorPosition = () => {
+    const position = inputRef.current?.selectionStart ?? input.length;
+    setCursorPos(position);
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && input.trim()) {
       onCommand(input.trim());
       setHistory((prev) => [input.trim(), ...prev]);
       setHistoryIndex(-1);
       setInput("");
+      setCursorPos(0);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       if (historyIndex < history.length - 1) {
         const next = historyIndex + 1;
         setHistoryIndex(next);
         setInput(history[next]);
+        setCursorPos(history[next].length);
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -37,16 +45,23 @@ const TerminalCLI = ({ onCommand, outputHistory }: TerminalCLIProps) => {
         const next = historyIndex - 1;
         setHistoryIndex(next);
         setInput(history[next]);
+        setCursorPos(history[next].length);
       } else {
         setHistoryIndex(-1);
         setInput("");
+        setCursorPos(0);
       }
     } else if (e.key === "Tab") {
       e.preventDefault();
       const commands = ["help", "ls", "cd", "cat", "clear", "whoami", "pwd"];
       const match = commands.find((c) => c.startsWith(input));
-      if (match) setInput(match);
+      if (match) {
+        setInput(match);
+        setCursorPos(match.length);
+      }
     }
+
+    requestAnimationFrame(syncCursorPosition);
   };
 
   return (
@@ -60,7 +75,7 @@ const TerminalCLI = ({ onCommand, outputHistory }: TerminalCLIProps) => {
           <div className="w-3 h-3 rounded-full bg-terminal-yellow" />
           <div className="w-3 h-3 rounded-full bg-terminal-green" />
         </div>
-        <span className="text-xs text-muted-foreground ml-2">
+        <span className="text-xl font-bold text-foreground ml-2">
           shubham@portfolio: ~ — bash
         </span>
       </div>
@@ -86,16 +101,28 @@ const TerminalCLI = ({ onCommand, outputHistory }: TerminalCLIProps) => {
         {/* Input line */}
         <div className="text-sm flex items-center">
           <Prompt />
-          <input
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="bg-transparent border-none outline-none text-foreground flex-1 caret-primary"
-            autoFocus
-            spellCheck={false}
-            autoComplete="off"
-          />
+          <div className="relative flex-1 min-w-0">
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                setCursorPos(e.target.selectionStart ?? e.target.value.length);
+              }}
+              onKeyDown={handleKeyDown}
+              onKeyUp={syncCursorPosition}
+              onClick={syncCursorPosition}
+              onSelect={syncCursorPosition}
+              className="bg-transparent border-none outline-none text-foreground w-full caret-transparent"
+              autoFocus
+              spellCheck={false}
+              autoComplete="off"
+            />
+            <span
+              className="pointer-events-none absolute top-1/2 -translate-y-1/2 bg-primary cursor-blink h-6 w-[3px] rounded-sm"
+              style={{ left: `calc(${cursorPos}ch)` }}
+            />
+          </div>
         </div>
       </div>
     </div>

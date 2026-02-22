@@ -40,15 +40,6 @@ const HeroSection = () => {
         </a>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="mt-4 text-sm"
-      >
-        <span className="text-muted-foreground">shubham@portfolio:~$ </span>
-        <span className="cursor-blink text-primary">|</span>
-      </motion.div>
     </TerminalWindow>
   );
 };
