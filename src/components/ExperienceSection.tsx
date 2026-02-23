@@ -29,7 +29,7 @@ const ExperienceSection = () => {
           <h3 className="text-lg font-semibold text-secondary">Associate Software Engineer</h3>
         </div>
         <p className="text-sm text-terminal-cyan mb-3">
-          Opentext, Bangalore <span className="text-muted-foreground">|</span> Sept 2024 – Present
+          OpenText, Bangalore <span className="text-muted-foreground">|</span> Sept 2024 – Present
         </p>
         <div className="space-y-1.5 text-sm">
           {bullets.map((bullet, i) => (

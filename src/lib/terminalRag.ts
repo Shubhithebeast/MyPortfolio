@@ -229,7 +229,7 @@ function buildKnowledgeDocs(): KnowledgeDoc[] {
     {
       source: "profile",
       section: "about",
-      text: "Shubham Bisht is an Associate Software Engineer at OpenText. He focuses on full-stack development, scalable backend systems, enterprise integrations, and CI/CD improvements.",
+      text: "Shubham Bisht is an Associate Software Engineer at OpenText. He focuses on scalable APIs, cloud-native delivery, backend reliability, and enterprise workflow automation.",
     },
     {
       source: "role",
@@ -244,12 +244,12 @@ function buildKnowledgeDocs(): KnowledgeDoc[] {
     {
       source: "skills",
       section: "skills",
-      text: "Languages include Java, JavaScript, Python, C++, and SQL. Backend and frontend stack includes Node.js, Express.js, React.js, and REST APIs.",
+      text: "Languages include Java, JavaScript, Python, C++, and SQL. Backend and frontend stack includes Node.js, Express.js, React.js, AngularJS, Spring, and REST APIs.",
     },
     {
       source: "skills",
       section: "skills",
-      text: "Databases and tooling include MongoDB, Firebase, Docker, Kubernetes, Helm, CI/CD, Git, Linux, Selenium WebDriver, Java, and MS Graph API automations.",
+      text: "Databases and tooling include MongoDB, PostgreSQL, Firebase, MySQL, Redis, Docker, Kubernetes, GCP Anthos, Helm, CI/CD, Git, Linux, and Jenkins.",
     },
     {
       source: "skills",
@@ -259,7 +259,7 @@ function buildKnowledgeDocs(): KnowledgeDoc[] {
     {
       source: "experience",
       section: "experience",
-      text: "At OpenText, Shubham upgraded ContentConnect from Node.js 20 to 22, implemented check-in and check-out features in SmartView, resolved 30+ critical production bugs, and automated demos with PowerShell and Microsoft Graph APIs reducing manual effort by 90%.",
+      text: "At OpenText, Shubham upgraded ContentConnect from Node.js 20 to 24, implemented check-in and check-out features in SmartView, resolved 40+ production defects, and automated demos with PowerShell and Microsoft Graph APIs reducing manual effort by 90%.",
     },
     {
       source: "experience",
@@ -269,12 +269,12 @@ function buildKnowledgeDocs(): KnowledgeDoc[] {
     {
       source: "projects-resume",
       section: "projects",
-      text: "Highlighted projects in resume include PahadiLingo, VideoTube, and Talkies real-time chat app. Talkies uses MERN stack, Socket.io, WebSockets, and JWT authentication with secure real-time messaging.",
+      text: "Highlighted projects in resume include PahadiLingo, Talkies real-time chat app, and QuotesApp. Talkies uses MERN stack, Socket.io, WebSockets, and secure authentication. QuotesApp includes author search, usage stats, and favorites flow.",
     },
     {
       source: "education",
       section: "education",
-      text: "Education includes B.E. in Computer Science from Chitkara University, Rajpura, Punjab with CGPA 9.0 and higher secondary from Army Public School, Uttarakhand with 81.8 percent.",
+      text: "Education includes B.E. in Computer Science from Chitkara University, Punjab with CGPA 9.0 and higher secondary from Army Public School, Punjab with 82 percent.",
     },
     {
       source: "resume-focus",
@@ -342,9 +342,9 @@ function buildDirectAnswer(intent: QueryIntent, retrieved: Array<RagChunk & { sc
     case "strengths":
       return "Shubham is strongest in backend APIs, React-based full-stack systems, cloud/devops workflows, and production debugging/automation.";
     case "skills":
-      return "Core stack: Java, JavaScript, Python, Node.js, Express.js, React.js, MongoDB, PostgreSQL, Docker, Kubernetes, and GCP Anthos.";
+      return "Core stack: Java, JavaScript, Python, Node.js, Express.js, React.js, AngularJS, Spring, MongoDB, PostgreSQL, Redis, Docker, Kubernetes, and GCP Anthos.";
     case "projects":
-      return "Key projects include PahadiLingo, VideoTube, and Talkies, with hands-on work in React, Firebase, Node.js, Express, MongoDB, Socket.io, and scalable API design.";
+      return "Key projects include PahadiLingo, Talkies, and QuotesApp, with hands-on work in React, Firebase, Node.js, Express, MongoDB, Socket.io, and scalable API design.";
     case "contact":
       return "You can contact Shubham at shubhambisht703@gmail.com or +91 8699391033.";
     case "resume":

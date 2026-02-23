@@ -4,8 +4,8 @@ import TerminalLine from "./TerminalLine";
 
 const skills = [
   { category: "Languages", items: ["Java", "JavaScript", "Python", "C++", "SQL"], color: "text-terminal-green" },
-  { category: "Backend & Frontend", items: ["Node.js", "Express.js", "React.js", "REST APIs"], color: "text-terminal-blue" },
-  { category: "Databases", items: ["MongoDB", "PostgreSQL", "Firebase", "MySQL"], color: "text-terminal-yellow" },
+  { category: "Backend & Frontend", items: ["HTML", "CSS", "Node.js", "Express.js", "React.js", "AngularJS", "Spring", "REST APIs"], color: "text-terminal-blue" },
+  { category: "Databases", items: ["MongoDB", "PostgreSQL", "Firebase", "MySQL", "Redis"], color: "text-terminal-yellow" },
   { category: "DevOps & Cloud", items: ["Docker", "Kubernetes", "GCP (Anthos)", "Helm", "CI/CD", "Git", "Linux", "Jenkins"], color: "text-terminal-purple" },
   { category: "AI/ML", items: ["NLP basics", "Word Embeddings", "Transformer Attention", "LLM Integration"], color: "text-terminal-cyan" },
 ];

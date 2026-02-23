@@ -42,8 +42,8 @@ const HELP_OUTPUT = [
 
 const MATRIX_MARKER = "__EASTER_MATRIX__";
 const PROFILE_IMAGE_PATH = `${import.meta.env.BASE_URL}mypic.png`;
-const RESUME_PDF_PATH = "/resume.pdf";
-const RESUME_VIEW_PATH = "/resume-view.html";
+const RESUME_PDF_PATH = `${import.meta.env.BASE_URL}resume.pdf`;
+const RESUME_VIEW_PATH = `${import.meta.env.BASE_URL}resume-view.html`;
 
 const HISTORY_OUTPUT = [
   '  1  whoami',
@@ -63,7 +63,7 @@ const NEOFETCH_OUTPUT = [
   '<span class="text-[hsl(140,100%,50%)]">     //   \\ \\    </span> <span class="text-[hsl(180,70%,55%)]">Kernel:</span> 6.8.0-portfolio',
   '<span class="text-[hsl(140,100%,50%)]">    (|     | )   </span> <span class="text-[hsl(180,70%,55%)]">Role:</span> Associate Software Engineer',
   '<span class="text-[hsl(140,100%,50%)]">   /\_\___/_/\   </span> <span class="text-[hsl(180,70%,55%)]">Stack:</span> React · Node.js · MongoDB',
-  '<span class="text-[hsl(140,100%,50%)]">   \___)=(___/   </span> <span class="text-[hsl(180,70%,55%)]">Contact:</span> shubh17bisht@gmail.com',
+  '<span class="text-[hsl(140,100%,50%)]">   \___)=(___/   </span> <span class="text-[hsl(180,70%,55%)]">Contact:</span> shubhambisht703@gmail.com',
 ];
 
 function buildTopOutput() {
@@ -99,7 +99,7 @@ const LS_OUTPUT = [
 ];
 
 const WHOAMI_OUTPUT = [
-  `<div style="white-space:normal;border-top:1px solid hsl(220,10%,30%);border-bottom:1px solid hsl(220,10%,30%);padding:10px 0;"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start;"><div style="min-width:240px;flex:1 1 320px;line-height:1.2;"><div style="font-size:28px;font-weight:800;color:hsl(140,100%,50%);">SHUBHAM BISHT</div><div style="margin-top:4px;font-size:16px;font-weight:700;color:hsl(35,100%,55%);">Associate Software Engineer @ OpenText</div><div style="margin-top:4px;font-size:14px;font-weight:600;color:hsl(140,100%,75%);">This portfolio belongs to Shubham Bisht.</div><div style="margin-top:4px;font-size:14px;color:hsl(180,70%,55%);">shubhambisht703@gmail.com <span style="color:hsl(220,10%,55%);">|</span> github.com/Shubhithebeast</div></div><div style="width:104px;height:104px;border:1px solid hsl(140,30%,20%);border-radius:10px;overflow:hidden;background:hsl(220,16%,10%);flex:0 0 104px;"><img src="${PROFILE_IMAGE_PATH}" alt="Shubham profile" style="width:100%;height:100%;object-fit:cover;object-position:center 28%;" /></div></div></div>`,
+  `<div style="white-space:normal;border-top:1px solid hsl(220,10%,30%);border-bottom:1px solid hsl(220,10%,30%);padding:10px 0;"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start;"><div style="min-width:240px;flex:1 1 320px;line-height:1.2;"><div style="font-size:28px;font-weight:800;color:hsl(140,100%,50%);">SHUBHAM BISHT</div><div style="margin-top:4px;font-size:16px;font-weight:700;color:hsl(35,100%,55%);">Associate Software Engineer @ OpenText</div><div style="margin-top:4px;font-size:14px;font-weight:600;color:hsl(140,100%,75%);">Software Engineer focused on scalable APIs, CI/CD, and cloud-native systems.</div><div style="margin-top:4px;font-size:14px;color:hsl(180,70%,55%);">shubhambisht703@gmail.com <span style="color:hsl(220,10%,55%);">|</span> github.com/Shubhithebeast</div></div><div style="width:104px;height:104px;border:1px solid hsl(140,30%,20%);border-radius:10px;overflow:hidden;background:hsl(220,16%,10%);flex:0 0 104px;"><img src="${PROFILE_IMAGE_PATH}" alt="Shubham profile" style="width:100%;height:100%;object-fit:cover;object-position:center 28%;" /></div></div></div>`,
 ];
 
 const SECTION_PREVIEW: Record<SectionId, string[]> = {
@@ -107,27 +107,28 @@ const SECTION_PREVIEW: Record<SectionId, string[]> = {
     '<span class="text-[hsl(140,70%,50%)]">about.txt</span>',
     'Name: Shubham Bisht',
     'Role: Associate Software Engineer @ OpenText',
-    'Focus: Full-stack development, APIs, and scalable backend systems',
-    'Contact: shubh17bisht@gmail.com | 8699391033 | github.com/Shubhithebeast',
+    'Focus: Scalable APIs, cloud-native delivery, and production reliability',
+    'Contact: shubhambisht703@gmail.com | 8699391033 | github.com/Shubhithebeast',
   ],
   skills: [
     '<span class="text-[hsl(140,70%,50%)]">skills.conf</span>',
     'Languages: Java, JavaScript, Python, C++, SQL',
-    'Backend: Node.js, Express.js, REST APIs, JWT auth',
-    'Frontend: React.js, responsive UI patterns',
-    'Database/Tools: MongoDB, Firebase, Git/GitHub',
+    'Backend & Frontend: Node.js, Express.js, React.js, AngularJS, Spring, REST APIs',
+    'Databases: MongoDB, PostgreSQL, Firebase, MySQL, Redis',
+    'DevOps & Cloud: Docker, Kubernetes, GCP (Anthos), Helm, CI/CD, Jenkins',
   ],
   experience: [
     '<span class="text-[hsl(140,70%,50%)]">experience.log</span>',
     'Current: Associate Software Engineer @ OpenText',
-    'Built and maintained production-grade backend and integration workflows',
-    'Improved API performance and reliability through optimization and testing',
+    'Upgraded ContentConnect from Node.js 20 to 24 and modernized legacy modules',
+    'Implemented SmartView check-in/check-out and fixed 40+ production defects',
+    'Built CI/CD pipelines on GCP (Anthos) with Kubernetes deployments',
   ],
   projects: [
     '<span class="text-[hsl(140,70%,50%)]">projects.json</span>',
     'PahadiLingo: Cultural language learning platform (React + Firebase)',
-    'VideoTube: Scalable video backend with auth, upload, and REST endpoints',
-    'Highlights: Search/favorites, role-based access, optimized DB queries',
+    'Talkies: Real-time MERN chat app with Socket.io and secure authentication',
+    'QuotesApp: Deployed MERN quote app with author search and usage stats',
   ],
   education: [
     '<span class="text-[hsl(140,70%,50%)]">education.md</span>',

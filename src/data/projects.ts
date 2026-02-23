@@ -9,6 +9,8 @@ export interface PortfolioProject {
   videoUrl?: string;
 }
 
+const staticBase = import.meta.env.BASE_URL;
+
 export const portfolioProjects: PortfolioProject[] = [
   {
     name: "PahadiLingo",
@@ -21,56 +23,33 @@ export const portfolioProjects: PortfolioProject[] = [
       "Search and favorites functionality for quick word lookup.",
       "Scalable architecture supporting 50+ active community contributors.",
     ],
-    url: "https://example.com/pahadilingo",
-    image: "/project-placeholder.svg",
+    url: "https://www.pahadilingo.in/",
+    image: `${staticBase}pics/pahadilingo.png`,
   },
   {
-    name: "VideoTube",
-    desc: "Video Streaming Backend Platform",
-    tech: ["Node.js", "MongoDB", "Express.js"],
-    period: "Dec 2024 – Present",
+    name: "Talkies",
+    desc: "Real-Time Chat Application",
+    tech: ["MERN", "Socket.io", "WebSockets", "REST APIs"],
+    period: "Apr 2024",
     bullets: [
-      "Scalable REST API (35+ routes) with JWT auth and role-based access control.",
-      "Optimized MongoDB queries with aggregation pipelines, improving response time 40%.",
-      "Secure file upload with Multer for video and image processing.",
+      "Built full-stack real-time chat app using MERN and Socket.io.",
+      "Implemented auth with bcrypt, avatar customization, and contact management.",
+      "Responsive UI with real-time updates and emoji support.",
     ],
-    url: "https://example.com/videotube",
-    image: "/project-placeholder.svg",
+    url: "https://talkiez.onrender.com/",
+    image: `${staticBase}pics/talkies.png`,
   },
   {
-    name: "Portfolio CLI",
-    desc: "Interactive terminal-based portfolio",
-    tech: ["React", "Tailwind", "Framer Motion"],
-    period: "2025",
+    name: "QuotesApp",
+    desc: "MERN Quotes Application",
+    tech: ["MERN", "MongoDB Atlas", "REST APIs"],
+    period: "Nov 2023",
     bullets: [
-      "Command-driven portfolio navigation with keyboard-first UX.",
-      "Custom blinking cursor and section routing via terminal commands.",
+      "Built and deployed full-stack MERN quote app with React and Node.js/Express.",
+      "Implemented random quote retrieval, author search, and usage stats APIs.",
+      "Added favorites persistence, copy/share actions, and responsive UI.",
     ],
-    url: "https://example.com/portfolio-cli",
-    image: "/project-placeholder.svg",
-  },
-  {
-    name: "Auth Starter",
-    desc: "Reusable auth starter template",
-    tech: ["Node.js", "JWT", "MongoDB"],
-    period: "2025",
-    bullets: [
-      "Starter template for auth, RBAC, and API security basics.",
-      "Pre-configured middleware and clean module structure.",
-    ],
-    url: "https://example.com/auth-starter",
-    image: "/project-placeholder.svg",
-  },
-  {
-    name: "Realtime Chat",
-    desc: "Socket-based chat demo",
-    tech: ["React", "Socket.io", "Express"],
-    period: "2024",
-    bullets: [
-      "Low-latency messaging with typing indicators and room support.",
-      "Simple production-ready architecture for extensions.",
-    ],
-    url: "https://example.com/realtime-chat",
-    image: "/project-placeholder.svg",
+    url: "https://quotesapp-gcj1.onrender.com",
+    image: `${staticBase}pics/quotesapp.png`,
   },
 ];
